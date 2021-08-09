@@ -1,0 +1,30 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+loguru = "*"
+pillow = "*"
+typer = "*"
+pydantic = {extras = ["dotenv"], version = "*"}
+
+[dev-packages]
+mypy = "*"
+pylint = "*"
+isort = "*"
+black = "*"
+invoke = "*"
+flake8 = "*"
+pytest = "*"
+
+[requires]
+python_version = "3.8"
+
+[scripts]
+build_talk_preview = "python3 app/main.py build_talk_preview_img"
+lint = "inv lint"
+reformat = "inv reformat"
+
+[pipenv]
+allow_prereleases = true
