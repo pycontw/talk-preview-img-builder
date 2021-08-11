@@ -13,18 +13,30 @@ def build_talk_preview_img():
     settings = Settings()
     logger.debug("Loading configuration {}", Settings())
     material = Material(
-        talk_resource_path=settings.TALKS_PATH,
-        pycon_logo_path=settings.PYCON_LOGO_PATH,
-        talk_category_icon_path=settings.TALK_CATEGORY_ICON_PATH,
-        python_level_empty_icon_path=settings.PYTHON_LEVEL_EMPTY,
-        python_level_filled_icon_path=settings.PYTHON_LEVEL_FILLED,
-        quote_img_path=settings.QUOTE_IMG_PATH,
+        talk_resource_path=settings.SPEECHES_PATH,
+        background_img_path=settings.BACKGROUND_IMG_PATH,
     )
     material.load()
+    logger.debug("{} Loaded", material)
     preview_img_builder = TalkPreviewImgBuilder(
         material=material,
-        background_color=settings.PREVIEW_BACKGROUND_COLOR,
-        content_background_color=settings.PREVIEW_CONTENT_BACKGROUND_COLOR,
+        size=(settings.PREVIEW_IMG_WIDTH, settings.PREVIEW_IMG_HEIGHT),
+        title_upper_left_pos=(
+            settings.PREVIEW_IMG_TITLE_UPPER_LEFT_X,
+            settings.PREVIEW_IMG_TITLE_UPPER_LEFT_Y,
+        ),
+        content_upper_left_pos=(
+            settings.PREVIEW_IMG_CONTENT_UPPER_LEFT_X,
+            settings.PREVIEW_IMG_CONTENT_UPPER_LEFT_Y,
+        ),
+        footer_upper_left_pos=(
+            settings.PREVIEW_IMG_FOOTER_UPPER_LEFT_X,
+            settings.PREVIEW_IMG_FOOTER_UPPER_LEFT_Y,
+        ),
+        title_height=settings.TITLE_HEIGHT,
+        content_height=settings.CONTENT_HEIGHT,
+        footer_height=settings.FOOTER_HEIGHT,
+        text_color=settings.PREVIEW_TEXT_COLOR,
     )
     preview_img_builder.execute()
 

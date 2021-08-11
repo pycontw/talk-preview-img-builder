@@ -11,17 +11,6 @@ from PIL import Image
 
 
 @dataclass
-class ImageFile:
-    """
-    Image components used for building preview image.
-    """
-
-    path: Path
-    image: Image.Image
-    name: Optional[str]
-
-
-@dataclass
 class Speaker:
     """
     Speaker model referred in talk info
@@ -56,20 +45,11 @@ class Material:  # pylint: disable=too-many-instance-attributes
     """
 
     talk_resource_path: Path
-    pycon_logo_path: Optional[Path] = None
-    talk_category_icon_path: Optional[Path] = None
-    python_level_empty_icon_path: Optional[Path] = None
-    python_level_filled_icon_path: Optional[Path] = None
-    quote_img_path: Optional[Path] = None
+    background_img_path: Path
 
     def __post_init__(self):
         self.talk_list = []
-        self.loaded_images = []
-        self.pycon_logog = None
-        self.talk_category_icon = None
-        self.python_level_empty_icon = None
-        self.python_level_filled_icon = None
-        self.quote_img = None
+        self.background_img = None
 
     def load(self):
         """
@@ -88,18 +68,7 @@ class Material:  # pylint: disable=too-many-instance-attributes
                     )
                 )
 
-        for path, name in [
-            (self.pycon_logo_path, "pycon_logo"),
-            (self.talk_category_icon_path, "talk_category_icon"),
-            (self.python_level_empty_icon_path, "python_level_empty_icon"),
-            (self.python_level_filled_icon_path, "python_level_filled_icon"),
-            (self.quote_img_path, "quote_img"),
-        ]:
-            if path and not path.exists():
-                raise FileNotFoundError(f"{path} not found")
-            if not path:
-                continue
-            logger.info("Loading {}", path.resolve())
-            img = ImageFile(path, Image.open(path.resolve()), path.stem)
-            self.loaded_images.append(img)
-            setattr(self, name, img)
+        if not self.background_img_path.exists():
+            raise FileNotFoundError(f"{self.background_img_path} not found")
+        logger.info("Loading {}", self.background_img_path.resolve())
+        self.background_img = Image.open(self.background_img_path.resolve())
