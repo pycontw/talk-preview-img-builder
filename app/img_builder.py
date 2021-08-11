@@ -3,6 +3,7 @@ ImgBuilder Class
 """
 import os
 import textwrap
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Tuple
@@ -26,8 +27,9 @@ class TalkPreviewImgBuilder:  # pylint: disable=too-many-instance-attributes
     title_height: int
     content_height: int
     footer_height: int
-    text_color: str = "#000000"
     font: str = "PingFang.ttc"
+    bold_font: str = "PingFang.ttc"
+    text_color: str = "#000000"
     output_path: Path = Path(__file__).parent.parent / "export"
 
     def __post_init__(self):
@@ -48,8 +50,13 @@ class TalkPreviewImgBuilder:  # pylint: disable=too-many-instance-attributes
         Fill in the title
         """
         draw = ImageDraw.Draw(img)
-        font = ImageFont.truetype(self.font, size=30)
-        content = "\n".join(textwrap.wrap(title, width=35))
+        font = ImageFont.truetype(self.bold_font, size=28)
+        if re.findall(r"[\u4e00-\u9fff]+", title):  # Detect if title contains Chinese
+            # Chinesse title
+            content = "\n".join(textwrap.wrap(title, width=20))
+        else:
+            # Default is english title
+            content = "\n".join(textwrap.wrap(title, width=35))
         width, height = draw.multiline_textsize(content, font=font)
         pos_x, pos_y = (
             self.title_upper_left_pos[0] + (self.title_size[0] - width) / 2,
@@ -106,7 +113,10 @@ class TalkPreviewImgBuilder:  # pylint: disable=too-many-instance-attributes
             self.__fill_in_language(output_image)
             self.__fill_in_python_level(output_image)
             output_image.save(
-                (self.output_path / (talk.title.replace(" ", "_") + ".png")).resolve(),
+                (
+                    self.output_path
+                    / (talk.title.replace(" ", "_").replace("/", "_") + ".png")
+                ).resolve(),
                 quality=95,
                 subsampling=0,
             )

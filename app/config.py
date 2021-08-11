@@ -1,6 +1,5 @@
 """App configuration"""
 from pathlib import Path
-from typing import Optional
 
 from pydantic import BaseSettings
 
@@ -26,7 +25,8 @@ class Settings(BaseSettings):  # pylint: disable=too-few-public-methods
     CONTENT_HEIGHT: int = 90
     FOOTER_HEIGHT: int = 25
     PREVIEW_TEXT_COLOR: str = "#080A42"
-    FONT: Optional[str] = None
+    PREVIEW_TEXT_FONT: str = "PingFang.ttc"
+    PREVIEW_TEXT_BOLD_FONT: str = "PingFang.ttc"
 
     class Config:  # pylint: disable=too-few-public-methods
         """Settings Config"""

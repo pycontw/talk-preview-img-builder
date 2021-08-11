@@ -37,6 +37,8 @@ def build_talk_preview_img():
         content_height=settings.CONTENT_HEIGHT,
         footer_height=settings.FOOTER_HEIGHT,
         text_color=settings.PREVIEW_TEXT_COLOR,
+        font=settings.PREVIEW_TEXT_FONT,
+        bold_font=settings.PREVIEW_TEXT_BOLD_FONT,
     )
     preview_img_builder.execute()
 
