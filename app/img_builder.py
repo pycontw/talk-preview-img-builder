@@ -2,14 +2,14 @@
 ImgBuilder Class
 """
 import os
-import textwrap
 import re
+import textwrap
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Tuple
+from typing import List, Tuple
 
 from loguru import logger
-from model import Material
+from model import Material, Speaker
 from PIL import Image, ImageDraw, ImageFont
 
 
@@ -27,6 +27,9 @@ class TalkPreviewImgBuilder:  # pylint: disable=too-many-instance-attributes
     title_height: int
     content_height: int
     footer_height: int
+    speaker_right_pos: int
+    speaker_upper_pos: int  # Will be updated depending on height of the content bottom
+    speaker_margin: int = 10
     font: str = "PingFang.ttc"
     bold_font: str = "PingFang.ttc"
     text_color: str = "#000000"
@@ -51,6 +54,7 @@ class TalkPreviewImgBuilder:  # pylint: disable=too-many-instance-attributes
         """
         draw = ImageDraw.Draw(img)
         font = ImageFont.truetype(self.bold_font, size=28)
+        # TODO: Update to wrap texts contained hybrid english and chinese
         if re.findall(r"[\u4e00-\u9fff]+", title):  # Detect if title contains Chinese
             # Chinesse title
             content = "\n".join(textwrap.wrap(title, width=20))
@@ -70,15 +74,61 @@ class TalkPreviewImgBuilder:  # pylint: disable=too-many-instance-attributes
             fill=self.text_color,
         )
 
-    def __fill_in_abstract(self, img: Image.Image):
+    def __fill_in_abstract(self, img: Image.Image, abstract: str):
         """
         Fill in the abstract of tha talk
         """
+        draw = ImageDraw.Draw(img)
+        font = ImageFont.truetype(self.font, size=18)
+        lines = []
+        abstract.replace("\r", "")
+        # TODO: Update to wrap texts contained hybrid english and chinese
+        if re.findall(
+            r"[\u4e00-\u9fff]+", abstract
+        ):  # Detect if abstract contains Chinese
+            for line in abstract.split("\n"):
+                lines += textwrap.wrap(line, width=30)
+            display_text = "\n".join(lines)
+        else:
+            # Default is english abstract
+            for line in abstract.split("\n"):
+                lines += textwrap.wrap(line, width=60)
+            display_text = "\n".join(lines)
 
-    def __fill_in_speaker(self, img: Image.Image):
+        width, height = draw.multiline_textsize(display_text, font=font)
+        pos_x, pos_y = (
+            self.content_upper_left_pos[0] + (self.content_size[0] - width) / 2,
+            self.content_upper_left_pos[1],
+        )
+        draw.multiline_text(
+            (pos_x, pos_y),
+            display_text,
+            font=font,
+            align="left",
+            fill=self.text_color,
+        )
+        self.speaker_upper_pos = pos_y + height + self.speaker_margin
+
+    def __fill_in_speaker(self, img: Image.Image, speakers: List[Speaker]):
         """
         Fill in the speaker of the talk
         """
+        draw = ImageDraw.Draw(img)
+        font = ImageFont.truetype(self.font, size=20)
+        name_list = "、".join([speaker.name for speaker in speakers])
+        display_text = f"— {name_list}"
+        width, _ = draw.textsize(display_text, font=font)
+        pos_x, pos_y = (
+            self.speaker_right_pos - width - self.speaker_margin,
+            self.speaker_upper_pos,
+        )
+        draw.text(
+            (pos_x, pos_y),
+            display_text,
+            font=font,
+            align="right",
+            fill=self.text_color,
+        )
 
     def __fill_in_category(self, img: Image.Image):
         """
@@ -107,8 +157,8 @@ class TalkPreviewImgBuilder:  # pylint: disable=too-many-instance-attributes
                 os.mkdir(self.output_path.resolve())
             output_image = self.material.background_img.copy()
             self.__fill_in_title(output_image, talk.title)
-            self.__fill_in_abstract(output_image)
-            self.__fill_in_speaker(output_image)
+            self.__fill_in_abstract(output_image, talk.abstract)
+            self.__fill_in_speaker(output_image, talk.speakers)
             self.__fill_in_category(output_image)
             self.__fill_in_language(output_image)
             self.__fill_in_python_level(output_image)

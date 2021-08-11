@@ -33,6 +33,8 @@ def build_talk_preview_img():
             settings.PREVIEW_IMG_FOOTER_UPPER_LEFT_X,
             settings.PREVIEW_IMG_FOOTER_UPPER_LEFT_Y,
         ),
+        speaker_upper_pos=settings.PREVIEW_IMG_SPEAKER_UPPER_RIGHT_Y,
+        speaker_right_pos=settings.PREVIEW_IMG_SPEAKER_UPPER_RIGHT_X,
         title_height=settings.TITLE_HEIGHT,
         content_height=settings.CONTENT_HEIGHT,
         footer_height=settings.FOOTER_HEIGHT,
