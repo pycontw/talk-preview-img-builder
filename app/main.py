@@ -37,8 +37,8 @@ def build_talk_preview_img():
         speaker_right_pos=settings.PREVIEW_IMG_SPEAKER_UPPER_RIGHT_X,
         title_height=settings.TITLE_HEIGHT,
         content_height=settings.CONTENT_HEIGHT,
-        footer_height=settings.FOOTER_HEIGHT,
         text_color=settings.PREVIEW_TEXT_COLOR,
+        hightlight_text_color=settings.PREVIEW_HIGHTLIGHT_TEXT_COLOR,
         font=settings.PREVIEW_TEXT_FONT,
         bold_font=settings.PREVIEW_TEXT_BOLD_FONT,
     )

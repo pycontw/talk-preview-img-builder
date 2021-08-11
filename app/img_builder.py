@@ -26,13 +26,13 @@ class TalkPreviewImgBuilder:  # pylint: disable=too-many-instance-attributes
     footer_upper_left_pos: Tuple[int, int]
     title_height: int
     content_height: int
-    footer_height: int
     speaker_right_pos: int
     speaker_upper_pos: int  # Will be updated depending on height of the content bottom
     speaker_margin: int = 10
     font: str = "PingFang.ttc"
     bold_font: str = "PingFang.ttc"
     text_color: str = "#000000"
+    hightlight_text_color: str = "#ffffff"
     output_path: Path = Path(__file__).parent.parent / "export"
 
     def __post_init__(self):
@@ -130,20 +130,63 @@ class TalkPreviewImgBuilder:  # pylint: disable=too-many-instance-attributes
             fill=self.text_color,
         )
 
-    def __fill_in_category(self, img: Image.Image):
+    def __fill_in_footer(
+        self, img: Image.Image, category: str, python_level: str, language: str
+    ):
         """
-        Fill in the category of the talk
+        Fill in the category, python level, language of the talk
         """
+        draw = ImageDraw.Draw(img)
+        font = ImageFont.truetype(self.font, size=15)
+        category_to_text = {
+            "APPL": "應用",
+            "PRAC": "最佳實踐與慣例",
+            "COM": "社群",
+            "DB": "資料庫",
+            "DATA": "資料分析",
+            "EDU": "教育",
+            "EMBED": "嵌入式系統",
+            "FIN": "金融科技",
+            "IOT": "物聯網",
+            "GAME": "遊戲",
+            "GRAPH": "圖像處理",
+            "ML": "機器學習",
+            "NLP": "自然語言處理",
+            "CORE": "Python 核心",
+            "TOOL": "專案建置工具",
+            "SCI": "科學",
+            "SEC": "資訊安全",
+            "ADMIN": "系統管理",
+            "TEST": "測試",
+            "WEB": "網站框架",
+            "OTHER": "其他",
+        }
+        language_to_text = {
+            "ENEN": "英文演講",
+            "ZHEN": "中文演講/英文投影片",
+            "ZHZH": "中文演講/中文投影片",
+            "TAI": "臺灣閩南語",
+        }
+        python_level_to_text = {
+            "EXPERIENCED": "●●●",
+            "INTERMEDIATE": "●●○",
+            "NOVICE": "●○○",
+        }
+        display_text = "    .    ".join(
+            [
+                category_to_text[category],
+                f"語言：{language_to_text[language]}",
+                f"Python 難易度：{python_level_to_text[python_level]}",
+            ]
+        )
 
-    def __fill_in_language(self, img: Image.Image):
-        """
-        Fill in the language of the talk
-        """
-
-    def __fill_in_python_level(self, img: Image.Image):
-        """
-        Fill in the python level of the talk
-        """
+        draw.text(
+            self.footer_upper_left_pos,
+            display_text,
+            font=font,
+            align="center",
+            fill=self.hightlight_text_color,
+        )
 
     def execute(self):
         """
@@ -159,9 +202,12 @@ class TalkPreviewImgBuilder:  # pylint: disable=too-many-instance-attributes
             self.__fill_in_title(output_image, talk.title)
             self.__fill_in_abstract(output_image, talk.abstract)
             self.__fill_in_speaker(output_image, talk.speakers)
-            self.__fill_in_category(output_image)
-            self.__fill_in_language(output_image)
-            self.__fill_in_python_level(output_image)
+            self.__fill_in_footer(
+                output_image,
+                category=talk.category,
+                python_level=talk.python_level,
+                language=talk.language,
+            )
             output_image.save(
                 (
                     self.output_path
