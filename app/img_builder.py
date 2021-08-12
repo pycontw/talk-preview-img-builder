@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Tuple
 
+from constant import CATEGORY_TO_TEXT, LANGUAGE_TO_TEXT, PYTHON_LEVEL_TO_TEXT
 from loguru import logger
 from model import Material, Speaker
 from PIL import Image, ImageDraw, ImageFont
@@ -33,7 +34,7 @@ class TalkPreviewImgBuilder:  # pylint: disable=too-many-instance-attributes
     bold_font: str = "PingFang.ttc"
     text_color: str = "#000000"
     hightlight_text_color: str = "#ffffff"
-    output_path: Path = Path(__file__).parent.parent / "export"
+    output_path: Path = Path(__file__).parent.parent / "export" / "png"
 
     def __post_init__(self):
         """
@@ -138,45 +139,11 @@ class TalkPreviewImgBuilder:  # pylint: disable=too-many-instance-attributes
         """
         draw = ImageDraw.Draw(img)
         font = ImageFont.truetype(self.font, size=15)
-        category_to_text = {
-            "APPL": "應用",
-            "PRAC": "最佳實踐與慣例",
-            "COM": "社群",
-            "DB": "資料庫",
-            "DATA": "資料分析",
-            "EDU": "教育",
-            "EMBED": "嵌入式系統",
-            "FIN": "金融科技",
-            "IOT": "物聯網",
-            "GAME": "遊戲",
-            "GRAPH": "圖像處理",
-            "ML": "機器學習",
-            "NLP": "自然語言處理",
-            "CORE": "Python 核心",
-            "TOOL": "專案建置工具",
-            "SCI": "科學",
-            "SEC": "資訊安全",
-            "ADMIN": "系統管理",
-            "TEST": "測試",
-            "WEB": "網站框架",
-            "OTHER": "其他",
-        }
-        language_to_text = {
-            "ENEN": "英文演講",
-            "ZHEN": "中文演講/英文投影片",
-            "ZHZH": "中文演講/中文投影片",
-            "TAI": "臺灣閩南語",
-        }
-        python_level_to_text = {
-            "EXPERIENCED": "●●●",
-            "INTERMEDIATE": "●●○",
-            "NOVICE": "●○○",
-        }
         display_text = "    .    ".join(
             [
-                category_to_text[category],
-                f"語言：{language_to_text[language]}",
-                f"Python 難易度：{python_level_to_text[python_level]}",
+                CATEGORY_TO_TEXT[category],
+                f"語言：{LANGUAGE_TO_TEXT[language]}",
+                f"Python 難易度：{PYTHON_LEVEL_TO_TEXT[python_level]}",
             ]
         )
 
