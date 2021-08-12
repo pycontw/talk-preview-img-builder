@@ -62,8 +62,8 @@ class PPTBuilderSettings(BaseSettings):  # pylint: disable=too-few-public-method
     CONTENT_HEIGHT: float = 7.5
     PREVIEW_TEXT_COLOR: str = "#080A42"
     PREVIEW_HIGHTLIGHT_TEXT_COLOR: str = "#EBCC73"
-    PREVIEW_TEXT_FONT: str = "PingFang.ttc"
-    PREVIEW_TEXT_BOLD_FONT: str = "PingFang.ttc"
+    PREVIEW_TEXT_FONT: str = "Taipei Sans TC Beta"
+    PREVIEW_TEXT_BOLD_FONT: str = "Taipei Sans TC Beta"
 
     class Config:  # pylint: disable=too-few-public-methods
         """Settings Config"""
