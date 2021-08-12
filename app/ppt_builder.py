@@ -97,7 +97,7 @@ class TalkPreviewPPTBuilder:  # pylint: disable=too-many-instance-attributes
         logger.debug("Filling abstract {}", abstract)
         paragraph.text = abstract
 
-        paragraph.line_spacing = Pt(12)
+        paragraph.line_spacing = Pt(15)
         paragraph.font.size = Pt(10)
         paragraph.font.name = self.font
         hex_code = self.text_color.lstrip("#")
@@ -139,32 +139,36 @@ class TalkPreviewPPTBuilder:  # pylint: disable=too-many-instance-attributes
         """
         Fill in the category, python level, language of the talk
         """
-        display_text = "    .    ".join(
-            [
-                CATEGORY_TO_TEXT[category],
-                f"語言：{LANGUAGE_TO_TEXT[language]}",
-                f"Python 難易度：{PYTHON_LEVEL_TO_TEXT[python_level]}",
-            ]
-        )
+        display_text_list = [
+            CATEGORY_TO_TEXT[category],
+            f"語言：{LANGUAGE_TO_TEXT[language]}",
+            f"Python 難易度：{PYTHON_LEVEL_TO_TEXT[python_level]}",
+        ]
+        field_width_ratio = [0.2, 0.4, 0.4]  # TODO: Update to be configurable
+        field_width = [ratio * self.footer_width for ratio in field_width_ratio]
+        field_position = [self.footer_upper_left_pos[0]]
+        for idx in range(1, len(field_width)):
+            field_position.append(field_position[idx - 1] + field_width[idx - 1])
 
-        text_box = slide.shapes.add_textbox(
-            Cm(self.footer_upper_left_pos[0]),
-            Cm(self.footer_upper_left_pos[1]),
-            Cm(self.footer_width),
-            Cm(1),
-        )
-        text_frame = text_box.text_frame
-        text_frame.word_wrap = True
-        paragraph = text_frame.add_paragraph()
-        logger.debug("Filling footer {}", display_text)
-        paragraph.text = display_text
-
-        paragraph.font.size = Pt(9)
-        paragraph.font.name = self.font
-        hex_code = self.hightlight_text_color.lstrip("#")
-        paragraph.font.color.rgb = RGBColor(
-            *tuple(int(hex_code[i : i + 2], 16) for i in (0, 2, 4))
-        )
+        for idx, display_text in enumerate(display_text_list):
+            text_box = slide.shapes.add_textbox(
+                Cm(field_position[idx]),
+                Cm(self.footer_upper_left_pos[1]),
+                Cm(field_width[idx]),
+                Cm(1),
+            )
+            text_frame = text_box.text_frame
+            text_frame.word_wrap = True
+            paragraph = text_frame.add_paragraph()
+            logger.debug("Filling footer {}", display_text)
+            paragraph.text = display_text
+            paragraph.font.bold = True
+            paragraph.font.size = Pt(9)
+            paragraph.font.name = self.font
+            hex_code = self.hightlight_text_color.lstrip("#")
+            paragraph.font.color.rgb = RGBColor(
+                *tuple(int(hex_code[i : i + 2], 16) for i in (0, 2, 4))
+            )
 
     def execute(self):
         """
@@ -175,6 +179,8 @@ class TalkPreviewPPTBuilder:  # pylint: disable=too-many-instance-attributes
         if not self.output_path.exists():
             os.mkdir(self.output_path.resolve())
         presentation = Presentation()
+        presentation.slide_width = Cm(self.size[0])
+        presentation.slide_height = Cm(self.size[1])
         for talk in self.material.talk_list:
             logger.info("Building slide for speech: {}...", talk.title)
             blank_slide_layout = presentation.slide_layouts[6]
