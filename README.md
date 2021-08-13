@@ -44,8 +44,8 @@ You can override the default values by editing the `config.py` file or adding a 
 | -------- | -------- | ------------- | -------- |
 | BACKGROUND_IMG_PATH | The path to the background image | `materials/img/background.png` | String |
 | SPEECHES_PATH  | The path to the speech description | `materials/speeches.json` | String |
-| PREVIEW_IMG_WIDTH     | The width of the generated preview image  |  700px / 14cm  | Integer / Float |
-| PREVIEW_IMG_HEIGHT    | The height of the generated preview image  |  700px / 14cm  | Integer / Float |
+| PREVIEW_IMG_WIDTH     | The width of the generated preview image  |  700px / 30cm  | Integer / Float |
+| PREVIEW_IMG_HEIGHT    | The height of the generated preview image  |  700px / 30cm  | Integer / Float |
 | PREVIEW_IMG_TITLE_UPPER_LEFT_X | The left position of the title in the upper left corner of the generated preview image  |  110px / 0.95cm  | Integer / Float |
 | PREVIEW_IMG_TITLE_UPPER_LEFT_Y | The top position of the title in the upper left corner of the generated preview image  |  110px / 1.04cm  | Integer / Float |
 | PREVIEW_IMG_CONTENT_UPPER_LEFT_X | The left position of the content in the upper left corner of the generated preview image  |  85px / 1.38cm  | Integer / Float |
