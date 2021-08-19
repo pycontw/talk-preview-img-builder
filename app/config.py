@@ -48,8 +48,8 @@ class PPTBuilderSettings(BaseSettings):  # pylint: disable=too-few-public-method
     SPEECHES_PATH: Path = Path(__file__).parent.parent / "material" / "speeches.json"
 
     # Unit: cm
-    PREVIEW_IMG_WIDTH: float = 30
-    PREVIEW_IMG_HEIGHT: float = 30
+    PREVIEW_IMG_WIDTH: float = 14
+    PREVIEW_IMG_HEIGHT: float = 14
     PREVIEW_IMG_TITLE_UPPER_LEFT_X: float = 0.95
     PREVIEW_IMG_TITLE_UPPER_LEFT_Y: float = 1.04
     PREVIEW_IMG_CONTENT_UPPER_LEFT_X: float = 1.38

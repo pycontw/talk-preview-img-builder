@@ -133,17 +133,31 @@ class TalkPreviewPPTBuilder:  # pylint: disable=too-many-instance-attributes
             *tuple(int(hex_code[i : i + 2], 16) for i in (0, 2, 4))
         )
 
-    def __fill_in_footer(
-        self, slide: Slide, category: str, python_level: str, language: str
+    def __fill_in_footer(  # pylint: disable=too-many-arguments
+        self,
+        slide: Slide,
+        category: str,
+        python_level: str,
+        language: str,
+        label_lang: str,
     ):
         """
         Fill in the category, python level, language of the talk
         """
-        display_text_list = [
-            CATEGORY_TO_TEXT[category],
-            f"語言：{LANGUAGE_TO_TEXT[language]}",
-            f"Python 難易度：{PYTHON_LEVEL_TO_TEXT[python_level]}",
-        ]
+        if label_lang not in ("zh-tw", "en-us"):
+            raise ValueError(f"Invalid label language: {label_lang}")
+        if label_lang == "zh-tw":
+            display_text_list = [
+                CATEGORY_TO_TEXT[label_lang][category],
+                f"語言：{LANGUAGE_TO_TEXT[label_lang][language]}",
+                f"Python 難易度：{PYTHON_LEVEL_TO_TEXT[python_level]}",
+            ]
+        else:
+            display_text_list = [
+                CATEGORY_TO_TEXT[label_lang][category],
+                f"Language: {LANGUAGE_TO_TEXT[label_lang][language]}",
+                f"Python Level: {PYTHON_LEVEL_TO_TEXT[python_level]}",
+            ]
         field_width_ratio = [0.2, 0.4, 0.4]  # TODO: Update to be configurable
         field_width = [ratio * self.footer_width for ratio in field_width_ratio]
         field_position = [self.footer_upper_left_pos[0]]
@@ -181,25 +195,27 @@ class TalkPreviewPPTBuilder:  # pylint: disable=too-many-instance-attributes
         presentation = Presentation()
         presentation.slide_width = Cm(self.size[0])
         presentation.slide_height = Cm(self.size[1])
-        for talk in self.material.talk_list:
-            logger.info("Building slide for speech: {}...", talk.title)
-            blank_slide_layout = presentation.slide_layouts[6]
-            slide = presentation.slides.add_slide(blank_slide_layout)
-            left = top = Cm(0)
-            slide.shapes.add_picture(
-                str(self.material.background_img_path.resolve()),
-                left,
-                top,
-                width=Cm(self.size[0]),
-                height=Cm(self.size[1]),
-            )
-            self.__fill_in_title(slide, talk.title)
-            self.__fill_in_abstract(slide, talk.abstract)
-            self.__fill_in_speaker(slide, talk.speakers)
-            self.__fill_in_footer(
-                slide,
-                category=talk.category,
-                python_level=talk.python_level,
-                language=talk.language,
-            )
+        for lang in ("en-us", "zh-tw"):
+            for talk in self.material.talk_list:
+                logger.info("Building slide for speech: {}...", talk.title)
+                blank_slide_layout = presentation.slide_layouts[6]
+                slide = presentation.slides.add_slide(blank_slide_layout)
+                left = top = Cm(0)
+                slide.shapes.add_picture(
+                    str(self.material.background_img_path.resolve()),
+                    left,
+                    top,
+                    width=Cm(self.size[0]),
+                    height=Cm(self.size[1]),
+                )
+                self.__fill_in_title(slide, talk.title)
+                self.__fill_in_abstract(slide, talk.abstract)
+                self.__fill_in_speaker(slide, talk.speakers)
+                self.__fill_in_footer(
+                    slide,
+                    category=talk.category,
+                    python_level=talk.python_level,
+                    language=talk.language,
+                    label_lang=lang,
+                )
         presentation.save((self.output_path / self.file_name).resolve())
