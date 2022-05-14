@@ -79,7 +79,4 @@ pipenv run reformat
 
 
 - [ ] Automatically generate the talk preview metadata file (e.g. `speeches.json`) from the PyConTW API server.
-- [ ] Implement hybrid language support text wrapping in title and content of the talk preview image.
-- [ ] Implement dynamic font size adjustment in the title and content of the talk preview image depending on the length of words.
 - [ ] Implement CI workflow by using GitHub Actions
-- [ ] Implement English version of preview image
