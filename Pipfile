@@ -4,20 +4,20 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-loguru = "*"
-pillow = "*"
-typer = "*"
-pydantic = {extras = ["dotenv"], version = "*"}
-python-pptx = "*"
+loguru = "~=0.5.3"
+pillow = "~=8.3.1"
+typer = "~=0.3.2"
+pydantic = {extras = ["dotenv"], version = "~=1.8.2"}
+python-pptx = "~=0.6.19"
 
 [dev-packages]
-mypy = "*"
-pylint = "*"
-isort = "*"
-black = "*"
-invoke = "*"
-flake8 = "*"
-pytest = "*"
+mypy = "~=0.910"
+pylint = "~=2.9.6"
+isort = "~=5.9.3"
+black = "~=21.7b0"
+invoke = "~=1.6.0"
+flake8 = "~=3.9.2"
+pytest = "~=6.2.4"
 
 [requires]
 python_version = "3.8"
