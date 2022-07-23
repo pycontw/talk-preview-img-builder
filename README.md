@@ -23,17 +23,12 @@ There are two materials that are required:
 
 After preparing the material, you can run the application by following command:
 
-```bash
-pipenv run build_talk_preview_img   # build the talk preview images
-```
-
-or
 
 ```bash
 pipenv run build_talk_preview_ppt  # build the talk preview slides
 ```
 
-The generated talk preview images and slides are located in the `export/` folder.
+The generated talk preview images and slides are located in the `export/ppt/` folder.
 
 ### Configuring the Application
 
