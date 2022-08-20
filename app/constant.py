@@ -55,12 +55,14 @@ LANGUAGE_TO_TEXT = {
         "ZHEN": "中文演講/英文投影片",
         "ZHZH": "中文演講/中文投影片",
         "TAI": "臺灣閩南語",
+        "JPEN": "日語",
     },
     "en-us": {
         "ENEN": "English talk",
         "ZHEN": "Chinese talk w. English slides",
         "ZHZH": "Chinese talk w. Chinese slides",
         "TAI": "Taiwanese Hokkien",
+        "JPEN": "Japanese talk",
     },
 }
 PYTHON_LEVEL_TO_TEXT = {
