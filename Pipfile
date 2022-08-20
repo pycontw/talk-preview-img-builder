@@ -23,7 +23,6 @@ pytest = "~=6.2.4"
 python_version = "3.8"
 
 [scripts]
-build_talk_preview_img = "python3 app/main.py build_talk_preview --output png"
 build_talk_preview_ppt = "python3 app/main.py build_talk_preview --output ppt"
 lint = "inv lint"
 reformat = "inv reformat"

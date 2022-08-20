@@ -2,7 +2,7 @@
 from enum import Enum
 
 import typer
-from config import ImgBuilderSettings, PPTBuilderSettings
+from config import PPTBuilderSettings
 from loguru import logger
 from model import Material
 from ppt_builder import TalkPreviewPPTBuilder
@@ -56,9 +56,7 @@ class TaskName(str, Enum):
 
 class OutputFormat(str, Enum):
     """All avaliable output formats"""
-
     ppt = "ppt"  # pylint: disable=invalid-name
-    png = "png"  # pylint: disable=invalid-name
 
 
 def main(
